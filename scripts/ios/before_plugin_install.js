@@ -9,7 +9,7 @@ var minCocoapodsVersion = "^1.11.2";
 
 module.exports = function(context) {
     checkCocoapodsVersion();
-
+    removePodfileLock();
     setContext(context);
 
     //get platform from the context supplied by cordova
@@ -27,6 +27,14 @@ module.exports = function(context) {
         writeJsonToXmlFile(pluginJSON, path.resolve("plugins/"+getPluginId()+"/plugin.xml"))
     }
 };
+
+function removePodfileLock() {
+    try {
+        execSync('rm platforms/ios/Podfile.lock', {encoding: 'utf8'});
+    } catch(err) {
+        console.warn('Could not remove Podfile.lock, this is not fatal');
+    }
+}
 
 function checkCocoapodsVersion(){
     var version;
