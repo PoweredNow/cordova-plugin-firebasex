@@ -174,6 +174,16 @@ exports.setUserProperty = function (name, value, success, error) {
   exec(success, error, "FirebasePlugin", "setUserProperty", [name, value]);
 };
 
+// iOS-only
+exports.initiateOnDeviceConversionMeasurement = function(userIdentifier, success, error){
+    if(typeof userIdentifier !== "object"
+        || (!userIdentifier.emailAddress && !userIdentifier.phoneNumber)
+        || (userIdentifier.emailAddress && userIdentifier.phoneNumber)
+    ) throw "The 'userIdentifier' argument must be an object containing EITHER an 'emailAddress' OR 'phoneNumber' key";
+
+    exec(success, error, "FirebasePlugin", "initiateOnDeviceConversionMeasurement", [userIdentifier]);
+}
+
 exports.fetch = function (cacheExpirationSeconds, success, error) {
     var args = [];
     if (typeof cacheExpirationSeconds === 'number') {
@@ -361,6 +371,11 @@ exports.authenticateUserWithMicrosoft = function (success, error, locale) {
 
 exports.authenticateUserWithFacebook = function (accessToken, success, error,) {
     exec(success, error, "FirebasePlugin", "authenticateUserWithFacebook", [accessToken]);
+};
+
+exports.authenticateUserWithOAuth = function (success, error, providerId, customParameters, scopes) {
+    if(typeof providerId !== 'string') return error("'providerId' must be a string");
+    exec(success, error, "FirebasePlugin", "authenticateUserWithOAuth", [providerId, customParameters, scopes]);
 };
 
 exports.signInWithCredential = function (credential, success, error) {
